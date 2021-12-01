@@ -5,39 +5,67 @@ definition {
 	property portal.upstream = "true";
 	property testray.main.component.name = "Raylife";
 
-	@description = "LPS-142187 - Verify if error message appear after inserting a wrong ZipCode."
-	@ignore = "Test Stub"
-	@priority = "4"
-	test CanViewErrorMessageForWrongZipCode {
+	setUp {
 
-		// TODO LPS-142187 CanViewErrorMessageForWrongZipCode pending implementation
+		TestCase.setUpPortalInstance();
+
+		User.firstLoginPG();
+
+        Raylife.createRaylifeSite(siteName = "Raylife");
 
 	}
 
-	@description = "LPS-142185 - Verify if Product Field is not empty by default."
-	@ignore = "Test Stub"
-	@priority = "4"
-	test ProductFieldNotEmpty {
+	tearDownCP {
+		var testPortalInstance = PropsUtil.get("test.portal.instance");
 
-		// TODO LPS-142185 ProductFieldNotEmpty pending implementation
+		if ("${testPortalInstance}" == "true") {
+			PortalInstances.tearDownCP();
+		}
+		else {
+			Raylife.tearDownCP();
+
+			User.logoutPG();
+		}
+	}
+
+	
+	@description = "LPS-142187 - Verify if error message appear after inserting a wrong ZipCode."
+	@priority = "4"
+	test CanViewErrorMessageForWrongZipCode {
+
+		ApplicationsMenu.gotoSite(site = "Raylife");
+
+        Type(
+            locator1 = "RaylifeHomePage#HOME_PAGE_ZIP_CODE",
+            value1 = "123");
+
+        Click(locator1 = "RaylifeHomePage#HOME_PAGE_GET_A_QUOTE");
+
+        AssertTextEquals(
+            locator1 = "RaylifeHomePage#HOME_PAGE_ERROR_ZIP_MESSAGE",
+            value1 = "Enter a valid 5 digit Zip");
 
 	}
 
 	@description = "LPS-142182 - Verify if ZipCode is required."
-	@ignore = "Test Stub"
 	@priority = "4"
 	test ZipCodeIsRequired {
 
-		// TODO LPS-142182 ZipCodeIsRequired pending implementation
+		ApplicationsMenu.gotoSite(site = "Raylife");
+
+		Click(locator1 = "RaylifeHomePage#HOME_PAGE_GET_A_QUOTE");
+        
+        AssertElementPresent(locator1 = "RaylifeHomePage#HOME_PAGE_ERROR_ZIP_MESSAGE");
 
 	}
 
 	@description = "LPS-142184 - Verify ZipCode Max number of characters (max chars 5)."
-	@ignore = "Test Stub"
 	@priority = "2"
 	test ZipCodeMaxNumber {
 
-		// TODO LPS-142184 ZipCodeMaxNumber pending implementation
+		ApplicationsMenu.gotoSite(site = "Raylife");
+
+        AssertElementPresent(locator1 = "RaylifeHomePage#HOME_PAGE_MESSAGE_MAX_NUMBER_CHARACTERS");
 
 	}
 
