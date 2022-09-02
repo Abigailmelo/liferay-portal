@@ -1,0 +1,76 @@
+@component-name = "portal-solutions"
+definition {
+
+    property osgi.modules.includes = "site-initializer-raylife-ap";
+    property portal.release = "false";
+    property portal.upstream = "true";
+    property release.feature.flags.disable.DISABLE_PRIVATE_LAYOUTS = "true";
+    property testray.main.component.name = "Site Initializer Raylife AP";
+
+    var testSiteName = "Raylife AP";
+    var testSiteURL = "raylife-ap";
+
+    setUp {
+
+        task ("Set up instance, sign in and create Raylife D2C") {
+            TestCase.setUpPortalInstance();
+
+            User.firstLoginPG();
+
+            Raylife.createRaylifeSite(site = "${testSiteName}");
+        }
+
+        task ("Create a new Raylife AP Site") {
+            Site.openSitesAdmin();
+
+            TeamExtranet.addSiteTemplateCP(
+                siteName = "${testSiteName}",
+                siteTemplateName = "Raylife AP");
+
+            Site.openSitesAdmin();     
+
+            ApplicationsMenu.gotoSite(site = "${testSiteName}");
+        }
+    }
+    
+
+    tearDown {
+     var testPortalInstance = PropsUtil.get("test.portal.instance");
+
+     RaylifeAP.tearDownCP();
+
+     if ("${testPortalInstance}" == "true") {
+         PortalInstances.tearDownCP();
+     }
+     else {
+         User.logoutPG();
+     }
+    }
+
+    @description = "LPS-154098 - Verify that the number in the center of the graph is equal to the total number of products registered."
+    @priority = "5"
+    test NumberCenterGraphEqualNumberOfProducts {
+
+        var portalURL = PropsUtil.get("portal.url");
+
+        Navigator.openSpecificURL(url = "${portalURL}/web/raylife-ap-1");
+
+
+        task ("Can view Sidebar Expanded") {
+			RaylifeAP.expandedSidebar(key_menuSidebar = "applications");
+		}
+
+        Click(locator1 = "RaylifeAPProducts#APPLICATION_SIDEBAR");
+
+        var rowCount= RaylifeAP.countTableLines(tableTitle="Applications");
+
+        AssertTextEquals(
+            locator1="RaylifeAPProducts#TOTAL_GRAPHIC_PRODUCT_NUMBER",
+            value1="${rowCount}"
+        );
+
+
+
+    }
+
+}
