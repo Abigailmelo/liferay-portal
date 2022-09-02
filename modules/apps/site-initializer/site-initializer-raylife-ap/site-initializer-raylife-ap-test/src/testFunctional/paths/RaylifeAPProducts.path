@@ -11,8 +11,18 @@
 
 <tbody>
 <tr>
+    <td>APPLICATION_SIDEBAR</td>
+    <td>//div[contains(@class,"align-items-center applications-menu d-flex mb-5")]//span</td>
+    <td></td>
+</tr>
+<tr>
     <td>APPLICATIONS_TABLE_ROW</td>
     <td>//*[contains(@class,'header-title' )and contains(., '${key_tableTitle}')]/parent::*//following-sibling::*/tbody/tr[${key_index}]</td>
+    <td></td>
+</tr>
+<tr>
+    <td>TOTAL_GRAPHIC_PRODUCT_NUMBER</td>
+    <td>//*[contains(@class,'applications-products-container')]//*[@class='bb-chart-arcs-title']</td>
     <td></td>
 </tr>
 </tbody>
