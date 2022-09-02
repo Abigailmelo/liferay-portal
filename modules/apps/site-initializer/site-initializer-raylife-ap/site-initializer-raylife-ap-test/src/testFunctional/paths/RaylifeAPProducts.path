@@ -10,6 +10,11 @@
 </thead>
 
 <tbody>
+<tr>
+    <td>APPLICATIONS_TABLE_ROW</td>
+    <td>//*[contains(@class,'header-title' )and contains(., '${key_tableTitle}')]/parent::*//following-sibling::*/tbody/tr[${key_index}]</td>
+    <td></td>
+</tr>
 </tbody>
 </table>
 </body>
